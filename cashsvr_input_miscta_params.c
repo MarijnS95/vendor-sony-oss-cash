@@ -228,5 +228,17 @@ int cash_miscta_init_params(struct cash_tamisc_calib_params *conf)
 	read(fd, conf, sizeof(struct cash_tamisc_calib_params));
 	close(fd);
 
+	ALOGD("CAPS1: %u, %u, %u, %u, %u", conf->rgbcir_caps1[0],
+	      conf->rgbcir_caps1[1], conf->rgbcir_caps1[2],
+	      conf->rgbcir_caps1[3], conf->rgbcir_caps1[4]);
+	ALOGD("CAPS2: %u, %u, %u, %u, %u", conf->rgbcir_caps2[0],
+	      conf->rgbcir_caps2[1], conf->rgbcir_caps2[2],
+	      conf->rgbcir_caps2[3], conf->rgbcir_caps2[4]);
+	ALOGD("Number of SPADs: %u", conf->tof_spad_num);
+	ALOGD("SPAD type: %s (%u)",
+	      conf->tof_spad_type ? "Aperture" : "Non-Aperture",
+	      conf->tof_spad_type);
+	ALOGD("TOF offset: %uum", conf->tof_um_offset);
+
 	return 0;
 }
