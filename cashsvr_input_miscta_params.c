@@ -87,21 +87,36 @@ static int cash_miscta_wire_up(void)
 	return 0;
 }
 
-static int cash_miscta_read_unit(uint32_t id, void *data_out)
+static int cash_miscta_read_unit(uint32_t id, void *data_out, size_t out_size)
 {
 	uint32_t ta_unit_sz = 0;
 	int rc;
 
 	rc = miscta_lnk.ta_getsize(id, &ta_unit_sz);
+	if (rc) {
+		ALOGE("FATAL: ta_getsize returned error %d", rc);
+		return -1;
+	}
+
 	if (ta_unit_sz == 0) {
 		ALOGE("FATAL: Cannot get MiscTA unit %u size", id);
 		return -1;
-	};
+	}
+
+	if (ta_unit_sz != out_size) {
+		ALOGW("WARNING: unit %u contains %u instead of %zu bytes!", id,
+		      ta_unit_sz, out_size);
+		if (ta_unit_sz > out_size) {
+			ALOGE("FATAL: unit %u doesn't fit, bailing out!", id);
+			/* Prevent writing out of the given memory region. */
+			return -1;
+		}
+	}
 
 	rc = miscta_lnk.ta_read(id, data_out, ta_unit_sz);
 	if (rc) {
-		ALOGE("WARNING: MiscTA unit %u read returns %d", id, rc);
-	};
+		ALOGW("WARNING: MiscTA unit %u read returns %d", id, rc);
+	}
 
 	return 0;
 }
@@ -151,23 +166,26 @@ static int cash_miscta_read_store_params(bool force)
 
 	rc = 0;
 
-	rc = cash_miscta_read_unit(TA_UNIT_RGBCIR_CAPS1, &tacfg.rgbcir_caps1);
-	rc += cash_miscta_read_unit(TA_UNIT_RGBCIR_CAPS2, &tacfg.rgbcir_caps2);
+	rc = cash_miscta_read_unit(TA_UNIT_RGBCIR_CAPS1, &tacfg.rgbcir_caps1,
+				   sizeof(tacfg.rgbcir_caps1));
+	rc += cash_miscta_read_unit(TA_UNIT_RGBCIR_CAPS2, &tacfg.rgbcir_caps2,
+				    sizeof(tacfg.rgbcir_caps2));
 	if (rc) {
 		ALOGE("FATAL: Cannot read RGBCIR config from MiscTA\n");
 		read_error = true;
 	}
 
 	/* Number of SPADs */
-	rc = cash_miscta_read_unit(TA_UNIT_TOF_SPAD_NUM, &tacfg.tof_spad_num);
+	rc = cash_miscta_read_unit(TA_UNIT_TOF_SPAD_NUM, &tacfg.tof_spad_num,
+				   sizeof(tacfg.tof_spad_num));
 
 	/* Type of SPADs: Aperture Type == 1 - Non-Aperture Type == 0 */
-	rc += cash_miscta_read_unit(TA_UNIT_TOF_SPAD_TYPE,
-					&tacfg.tof_spad_type);
+	rc += cash_miscta_read_unit(TA_UNIT_TOF_SPAD_TYPE, &tacfg.tof_spad_type,
+				    sizeof(tacfg.tof_spad_type));
 
 	/* Calibration Data offset, expressed in micrometers */
-	rc += cash_miscta_read_unit(TA_UNIT_TOF_UM_OFFSET,
-					&tacfg.tof_um_offset);
+	rc += cash_miscta_read_unit(TA_UNIT_TOF_UM_OFFSET, &tacfg.tof_um_offset,
+				    sizeof(tacfg.tof_um_offset));
 	if (rc) {
 		ALOGE("FATAL: Cannot read ToF config from MiscTA\n");
 		ALOGE("Your ToF sensor may work suboptimally.\n");
