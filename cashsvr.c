@@ -152,7 +152,7 @@ int32_t cashsvr_get_exptime_iso(struct cash_response *cash_resp) {
 
 	iso = (int32_t)polyreg_f(rgbc_data.clear, clear_iso_conf.terms,
 					cash_conf.rgbc_polyreg_degree);
-	
+
 	for (i = 0; i < clear_iso_conf.num_steps; i++) {
 		if (iso >= clear_iso_conf.table[i].output_val) {
 			break;
@@ -476,7 +476,7 @@ static int cash_clear_iso_get_coeff(void)
 
 int cashsvr_configure(void)
 {
-        char propbuf[PROPERTY_VALUE_MAX];
+	char propbuf[PROPERTY_VALUE_MAX];
 	struct cash_tamisc_calib_params calib_params;
 	int rc = 0;
 
@@ -516,7 +516,7 @@ int cashsvr_configure(void)
 	 * a single reading of the ToF distance measurement and
 	 * instantly trust it if this configuration is zero.
 	 */
-        property_get("persist.vendor.cash.tof.stabilized", propbuf, "0");
+	property_get("persist.vendor.cash.tof.stabilized", propbuf, "0");
 	if (atoi(propbuf) > 0)
 		cash_conf.use_tof_stabilized = 1;
 
@@ -524,7 +524,7 @@ int cashsvr_configure(void)
 	 * Disable ToF functionality if this configuration
 	 * option is 1.
 	 */
-        property_get("persist.vendor.cash.tof.disable", propbuf, "0");
+	property_get("persist.vendor.cash.tof.disable", propbuf, "0");
 	if (atoi(propbuf) > 0)
 		cash_conf.disable_tof = 1;
 
@@ -546,7 +546,7 @@ int cashsvr_configure(void)
 	 * Disable RGBC functionality if this configuration
 	 * option is 1.
 	 */
-        property_get("persist.vendor.cash.rgbc.disable", propbuf, "0");
+	property_get("persist.vendor.cash.rgbc.disable", propbuf, "0");
 	if (atoi(propbuf) > 0)
 		cash_conf.disable_rgbc = 1;
 
