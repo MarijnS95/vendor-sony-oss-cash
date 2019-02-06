@@ -157,7 +157,7 @@ static int cash_rgbc_sys_init(int devno, int plen)
 	snprintf(rgbc_gain_path, plen + LEN_GAIN,
 		"%s%d/als_gain", sysfs_input_str, devno);
 
-	
+
 	// call chown on the paths to allow access after context switch
 	rc = cash_set_permissions(rgbc_chip_power_path, "system", "input");
 	rc += cash_set_permissions(rgbc_power_state_path, "system", "input");
@@ -360,7 +360,8 @@ bool cash_input_is_rgbc_alive(void)
 	return cash_thread_run[THREAD_RGBC];
 }
 
-int cash_input_rgbc_init(__attribute__((unused))struct cash_tamisc_calib_params *calib_params)
+int cash_input_rgbc_init(
+	__attribute__((unused)) struct cash_tamisc_calib_params *calib_params)
 {
 	int dlen, evtno, rc;
 	char *devname, *devpath;

@@ -54,4 +54,5 @@ static const char devfs_input_str[] = "/dev/input/event";
 
 int cash_input_threadman(bool start, struct thread_data *thread_data);
 int cash_set_parameter(char* path, char* value, int value_len);
-int cash_set_permissions(char* fpath, char* str_uid, char* str_gid);
+int cash_set_permissions(const char *fpath, const char *str_uid,
+			 const char *str_gid);

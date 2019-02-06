@@ -83,7 +83,8 @@ int cash_set_parameter(char* path, char* value, int value_len) {
  *
  * \return Returns zero for success or -1 for error.
  */
-int cash_set_permissions(char* fpath, char* str_uid, char* str_gid)
+int cash_set_permissions(const char *fpath, const char *str_uid,
+			 const char *str_gid)
 {
 	struct passwd *pwd;
 	struct passwd *grp;
