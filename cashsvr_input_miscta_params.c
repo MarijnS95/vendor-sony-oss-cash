@@ -17,8 +17,7 @@
  * limitations under the License.
  */
 
-
-#define LOG_TAG                 "CASH_MISCTA_READER"
+#define LOG_TAG "CASH_MISCTA_READER"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -131,7 +130,7 @@ static int cash_miscta_read_unit(uint32_t id, void *data_out, size_t out_size)
 static int cash_miscta_read_store_params(bool force)
 {
 	struct cash_tamisc_calib_params tacfg;
-	struct stat st = {0};
+	struct stat st = { 0 };
 	bool read_error = false;
 	int rc, fd, i;
 
@@ -206,14 +205,14 @@ static int cash_miscta_read_store_params(bool force)
 
 int cash_miscta_init_params(struct cash_tamisc_calib_params *conf)
 {
-	struct stat st = {0};
+	struct stat st = { 0 };
 	int ret, fd;
 
 	/* The folder has to be created in OS init scripts. */
 	ret = stat(CASHSERVER_DATASTORE_DIR, &st);
 	if (ret == -1) {
 		ALOGW("%s does not exist. Bailing out.",
-				CASHSERVER_DATASTORE_DIR);
+		      CASHSERVER_DATASTORE_DIR);
 		return -1;
 	}
 
